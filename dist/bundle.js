@@ -70,6 +70,8 @@
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _lodash = __webpack_require__(1);
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -83,10 +85,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // Adding a comment to see if webpack is watching.
-
+var KEYCODE = {
+  DOWN: 40,
+  LEFT: 37,
+  RIGHT: 39,
+  UP: 38,
+  HOME: 36,
+  END: 35
+};
 var header = document.createElement('header');
-var shadowRoot = header.attachShadow({ mode: 'open' });
-shadowRoot.innerHTML = '<h1>Hello Shadow DOM</h1>'; // Could also use appendChild().
+var headerShadowRoot = header.attachShadow({ mode: 'open' });
+headerShadowRoot.innerHTML = '<h1>Hello Shadow DOM</h1>'; // Could also use appendChild().
+
+var template = document.createElement('template');
+template.innerHTML = '\n  <style>\n    :host {\n      display: flex;\n      flex-wrap: wrap;\n    }\n    ::slotted(howto-panel) {\n      flex-basis: 100%;\n    }\n  </style>\n  <slot name="tab"></slot>\n  <slot name="panel"></slot>\n  ';
 
 function component() {
 
@@ -99,24 +111,257 @@ function component() {
 
 // Use custom elements API v1 to register a new HTML tag and define its JS behavior
 // using an ES6 class. Every instance of <fancy-tab> will have this same prototype.
-customElements.define('fancy-tabs', function (_HTMLElement) {
-  _inherits(_class, _HTMLElement);
 
-  function _class() {
-    _classCallCheck(this, _class);
+var HowtoTabs = function (_HTMLElement) {
+  _inherits(HowtoTabs, _HTMLElement);
 
-    // always call super() first in the ctor.
+  function HowtoTabs() {
+    _classCallCheck(this, HowtoTabs);
 
-    // Attach a shadow root to <fancy-tabs>.
-    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+    var _this = _possibleConstructorReturn(this, (HowtoTabs.__proto__ || Object.getPrototypeOf(HowtoTabs)).call(this));
 
-    var shadowRoot2 = _this.attachShadow({ mode: 'open' });
-    shadowRoot2.innerHTML = '\n      <style>#tabs { ... }</style> <!-- styles are scoped to fancy-tabs! -->\n      <div id="tabs">\n        <slot id="tabsSlot" name="title"></slot> <!-- named slot -->\n      </div>\n      <div id="panels">\n        <slot id="panelsSlot"></slot>\n      </div>\n    ';
+    _this._onSlotChange = _this._onSlotChange.bind(_this);
+    _this.attachShadow({ mode: 'open' });
+    _this.shadowRoot.appendChild(template.content.cloneNode(true));
+    _this._tabSlot = _this.shadowRoot.querySelector('slot[name=tab]');
+    _this._panelSlot = _this.shadowRoot.querySelector('slot[name=panel]');
+    _this._tabSlot.addEventListener('slotchange', _this._onSlotChange);
+    _this._panelSlot.addEventListener('slotchange', _this._onSlotChange);
     return _this;
   }
 
-  return _class;
-}(HTMLElement));
+  _createClass(HowtoTabs, [{
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      var _this2 = this;
+
+      this.addEventListener('keydown', this._onKeyDown);
+      this.addEventListener('click', this._onClick);
+      if (!this.hasAttribute('role')) this.setAttribiute('role', 'tablist');
+
+      Promise.all([customElements.whenDefined('howto-tab'), customElements.whenDefined('howto-panel')]).then(function (_) {
+        return _this2._linkPanels();
+      });
+    }
+  }, {
+    key: 'disconnectedCallback',
+    value: function disconnectedCallback() {
+      this.removeEventListener('keydown', this._onKeyDown);
+      this.removeEventListener('click', this._onClick);
+    }
+  }, {
+    key: '_onSlotChage',
+    value: function _onSlotChage() {
+      this.linkPanels();
+    }
+  }, {
+    key: '_linkPanels',
+    value: function _linkPanels() {
+      var tabs = this._allTabs();
+
+      tabs.forEach(function (tab) {
+        var panel = tab.nextElementSibling;
+        if (panel.tagName.toLowerCase() !== 'howto-panel') {
+          console.error('Tab #' + tab.id + ' is not a' + 'sibling of a <howto-panel>');
+          return;
+        }
+        tab.setAttribute('aria-controls', panel.id);
+        panel.setAttribute('aria-labelledby', tab.id);
+      });
+
+      var selectedTab = tabs.find(function (tab) {
+        return tab.selected;
+      }) || tabs[0];
+
+      this._selectTab(selectedTab);
+    }
+  }, {
+    key: '_allPanels',
+    value: function _allPanels() {
+      return Array.from(this.querySelectorAll('howto-panel'));
+    }
+  }, {
+    key: '_allTabs',
+    value: function _allTabs() {
+      return Array.from(this.querySelectorAll('howto-tab'));
+    }
+  }, {
+    key: '_panelForTab',
+    value: function _panelForTab(tab) {
+      var panelId = tab.getAttribute('aria-controls');
+      return this.querySelector('#' + panelId);
+    }
+  }, {
+    key: '_prevTab',
+    value: function _prevTab() {
+      var tabs = this._allTabs();
+      var newIdx = tabs.findIndex(function (tab) {
+        return tab.selected;
+      }) - 1;
+      return tabs[(newIdx + tabs.length) % tabs.length];
+    }
+  }, {
+    key: '_firstTab',
+    value: function _firstTab() {
+      var tabs = this._allTabs();
+      return tabs[0];
+    }
+  }, {
+    key: '_nextTab',
+    value: function _nextTab() {
+      var tabs = this._allTabs();
+      var newIdx = tabs.findIndex(function (tab) {
+        return tab.selected;
+      }) + 1;
+      return tabs[newIdx % tabs.length];
+    }
+  }, {
+    key: 'reset',
+    value: function reset() {
+      var tabs = this._allTabs();
+      var panels = this._allPanels();
+      tabs.forEach(function (tab) {
+        return tab.selected = false;
+      });
+      panels.forEach(function (panel) {
+        return panel.hidden = true;
+      });
+    }
+  }, {
+    key: '_selectTab',
+    value: function _selectTab(newTab) {
+      this.reset();
+      var newPanel = this._panelForTab(newTab);
+      if (!newPanel) throw new Error('No panel with id ' + newPanelId);
+      newTab.selected = true;
+      newPanel.hidden = false;
+      newTab.focus();
+    }
+  }, {
+    key: '_onKeyDown',
+    value: function _onKeyDown(event) {
+      if (event.target.getAttribute('role') !== 'tab') return;
+
+      if (event.altKey) return;
+
+      var newTab = void 0;
+      switch (event.keyCode) {
+        case KEYCODE.LEFT:
+        case KEYCODE.UP:
+          newTab = this._prevTab();
+          break;
+
+        case KEYCODE.RIGHT:
+        case KEYCODE.DOWN:
+          newTab = this._nextTab();
+          break;
+
+        case KEYCODE.HOME:
+          newTab = this._firstTab();
+          break;
+
+        case KEYCODE.END:
+          newTab = this._lastTab();
+          break;
+      }
+
+      event.preventDefault();
+
+      this._selectTab(newTab);
+    }
+  }, {
+    key: '_onClick',
+    value: function _onClick(event) {
+      if (event.target.getAttribute('role') !== 'tab') return;
+      this._selectTab(event.target);
+    }
+  }]);
+
+  return HowtoTabs;
+}(HTMLElement);
+
+customElements.define('howto-tabs', HowtoTabs);
+var howtoTabCounter = 0;
+
+var HowtoTab = function (_HTMLElement2) {
+  _inherits(HowtoTab, _HTMLElement2);
+
+  _createClass(HowtoTab, null, [{
+    key: 'observedAttributes',
+    get: function get() {
+      return ['selected'];
+    }
+  }]);
+
+  function HowtoTab() {
+    _classCallCheck(this, HowtoTab);
+
+    return _possibleConstructorReturn(this, (HowtoTab.__proto__ || Object.getPrototypeOf(HowtoTab)).call(this));
+  }
+
+  _createClass(HowtoTab, [{
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      this.setAttribute('role', 'tab');
+      if (!this.id) this.id = 'howto-tab-generated-' + howtoTabCounter++;
+      this.setAttribute('aria-selected', 'false');
+      this.setAttribute('tabindex', -1);
+      this._upgradeProperty('selected');
+    }
+  }, {
+    key: '_upgradeProperty',
+    value: function _upgradeProperty(prop) {
+      if (this.hasOwnProperty(prop)) {
+        var value = this[prop];
+        delete this[prop];
+        this[prop] = value;
+      }
+    }
+  }, {
+    key: 'attributeChangedCallback',
+    value: function attributeChangedCallback() {
+      var value = this.hasAttribute('selected');
+      this.setAttribute('aria-selected', value);
+      this.setAttribute('tabindex', value ? 0 : -1);
+    }
+  }, {
+    key: 'selected',
+    set: function set(value) {
+      value = Boolean(value);
+      if (value) this.setAttribute('selected', '');else this.removeAttribute('selected');
+    },
+    get: function get() {
+      return this.hasAttribute('selected');
+    }
+  }]);
+
+  return HowtoTab;
+}(HTMLElement);
+
+customElements.define('howto-tab', HowtoTab);
+var howtoPanelCounter = 0;
+
+var HowtoPanel = function (_HTMLElement3) {
+  _inherits(HowtoPanel, _HTMLElement3);
+
+  function HowtoPanel() {
+    _classCallCheck(this, HowtoPanel);
+
+    return _possibleConstructorReturn(this, (HowtoPanel.__proto__ || Object.getPrototypeOf(HowtoPanel)).call(this));
+  }
+
+  _createClass(HowtoPanel, [{
+    key: 'connectedCallback',
+    value: function connectedCallback() {
+      this.setAttribute('role', 'tabpanel');
+      if (!this.id) this.id = 'howto-panel-generated-' + howtoPanelCounter++;
+    }
+  }]);
+
+  return HowtoPanel;
+}(HTMLElement);
+
+customElements.define('howto-panel', HowtoPanel);
 
 document.body.appendChild(shadowRoot);
 document.body.appendChild(component());

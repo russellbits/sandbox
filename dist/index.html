@@ -1,17 +1,32 @@
 <html>
   <head>
     <title>Javascript Sandbox</title>
+
+    <style>
+      howto-tab {
+        border: 1px solid black;
+        padding: 20px;
+      }
+      howto-panel {
+        padding: 20px;
+        background-color: lightgray;
+      }
+      howto-tab[selected] {
+        background-color: bisque;
+      }
+    </style>
   </head>
   <body>
-    <h4>Here is some initial HTML to test webpack watch.</h4>
+
     <script src="bundle.js"></script>
-    <fancy-tabs>
-      <button slot="title">Web</button>
-      <button slot="title" selected>Components</button>
-      <button slot="title">R Fun</button>
-      <section>Pork belly four dollar toast edison bulb williamsburg ramps health goth bespoke everyday carry af pug letterpress fixie. Pitchfork tumeric seitan forage tote bag franzen blog whatever meditation. Fixie art party beard cloud bread franzen. You probably haven't heard of them post-ironic jean shorts, kale chips literally twee chambray shoreditch 90's.</section>
-      <section>Slow-carb try-hard pinterest portland, DIY activated charcoal scenester sustainable godard shoreditch. Succulents raclette vape, stumptown tumblr fanny pack gluten-free 8-bit post-ironic poke bushwick actually. Authentic neutra single-origin coffee shoreditch salvia slow-carb. Tumeric food truck normcore green juice paleo.</section>
-      <section>Banh mi thundercats copper mug street art pok pok ethical yr. Stumptown disrupt man braid gentrify knausgaard letterpress edison bulb kickstarter drinking vinegar banjo crucifix actually hexagon. Pok pok wayfarers echo park occupy fingerstache health goth 8-bit. Heirloom pitchfork activated charcoal, tbh tattooed hexagon cold-pressed shoreditch whatever pug.</section>
-    </fancy-tabs>
+    <howto-tabs>
+      <howto-tab role="heading" slot="tab">Web</howto-tab>
+      <howto-panel role="region" slot="panel">Pork belly four dollar toast edison bulb williamsburg ramps health goth bespoke everyday carry af pug letterpress fixie. Pitchfork tumeric seitan forage tote bag franzen blog whatever meditation. Fixie art party beard cloud bread franzen. You probably haven't heard of them post-ironic jean shorts, kale chips literally twee chambray shoreditch 90's.</howto-panel>
+      <howto-tab role="heading" slot="tab">Components</howto-tab>
+      <howto-panel role="region" slot="panel">Slow-carb try-hard pinterest portland, DIY activated charcoal scenester sustainable godard shoreditch. Succulents raclette vape, stumptown tumblr fanny pack gluten-free 8-bit post-ironic poke bushwick actually. Authentic neutra single-origin coffee shoreditch salvia slow-carb. Tumeric food truck normcore green juice paleo.</howto-panel>
+      <howto-tab role="heading" slot="tab">R Fun</howto-tab>
+      <howto-panel role="region" slot="panel">Banh mi thundercats copper mug street art pok pok ethical yr. Stumptown disrupt man braid gentrify knausgaard letterpress edison bulb kickstarter drinking vinegar banjo crucifix actually hexagon. Pok pok wayfarers echo park occupy fingerstache health goth 8-bit. Heirloom pitchfork activated charcoal, tbh tattooed hexagon cold-pressed shoreditch whatever pug.</howto-panel>
+    </howto-tabs>
+
   </body>
 </html>
