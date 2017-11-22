@@ -1,32 +1,108 @@
 <html>
   <head>
     <title>Javascript Sandbox</title>
-
-    <style>
-      howto-tab {
-        border: 1px solid black;
-        padding: 20px;
-      }
-      howto-panel {
-        padding: 20px;
-        background-color: lightgray;
-      }
-      howto-tab[selected] {
-        background-color: bisque;
-      }
-    </style>
   </head>
   <body>
 
-    <script src="bundle.js"></script>
-    <howto-tabs>
-      <howto-tab role="heading" slot="tab">Web</howto-tab>
-      <howto-panel role="region" slot="panel">Pork belly four dollar toast edison bulb williamsburg ramps health goth bespoke everyday carry af pug letterpress fixie. Pitchfork tumeric seitan forage tote bag franzen blog whatever meditation. Fixie art party beard cloud bread franzen. You probably haven't heard of them post-ironic jean shorts, kale chips literally twee chambray shoreditch 90's.</howto-panel>
-      <howto-tab role="heading" slot="tab">Components</howto-tab>
-      <howto-panel role="region" slot="panel">Slow-carb try-hard pinterest portland, DIY activated charcoal scenester sustainable godard shoreditch. Succulents raclette vape, stumptown tumblr fanny pack gluten-free 8-bit post-ironic poke bushwick actually. Authentic neutra single-origin coffee shoreditch salvia slow-carb. Tumeric food truck normcore green juice paleo.</howto-panel>
-      <howto-tab role="heading" slot="tab">R Fun</howto-tab>
-      <howto-panel role="region" slot="panel">Banh mi thundercats copper mug street art pok pok ethical yr. Stumptown disrupt man braid gentrify knausgaard letterpress edison bulb kickstarter drinking vinegar banjo crucifix actually hexagon. Pok pok wayfarers echo park occupy fingerstache health goth 8-bit. Heirloom pitchfork activated charcoal, tbh tattooed hexagon cold-pressed shoreditch whatever pug.</howto-panel>
-    </howto-tabs>
+    <template>
+    <style>
+      * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+      }
 
+      #slider {
+        max-width: 600px;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      #overflow {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      #slides .inner {
+        width: 400%;
+      }
+
+      #slides .inner {
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+
+        -webkit-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -moz-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -o-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -ms-transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        transition: all 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+
+        -webkit-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -moz-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -o-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        -ms-transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+        transition-timing-function: cubic-bezier(0.770, 0.000, 0.175, 1.000);
+      }
+
+      #slides img {
+        width: 25%;
+        float: left;
+      }
+
+      #slide1:checked ~ #slides .inner {
+        margin-left: 0;
+      }
+
+      #slide2:checked ~ #slides .inner {
+        margin-left: -100%;
+      }
+
+      #slide3:checked ~ #slides .inner {
+        margin-left: -200%;
+      }
+
+      #slide4:checked ~ #slides .inner {
+        margin-left: -300%;
+      }
+
+      input[type="radio"] {
+        display: none;
+      }
+
+      label {
+        background: #CCC;
+        display: inline-block;
+        cursor: pointer;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+      }
+
+      #slide1:checked ~ label[for="slide1"],
+      #slide2:checked ~ label[for="slide2"],
+      #slide3:checked ~ label[for="slide3"],
+      #slide4:checked ~ label[for="slide4"] {
+        background: #333;
+      }
+      #slides ::content img {
+        width: 25%;
+        float: left;
+      }
+    </style>
+
+    <img-slider>
+      <img src="images/rock.jpg" alt="an interesting rock">
+      <img src="images/grooves.jpg" alt="some neat grooves">
+      <img src="images/arch.jpg" alt="a rock arch">
+      <img src="images/sunset.jpg" alt="a dramatic sunset">
+    </img-slider>
+  </template>
+
+    <div class="container"></div>
+    <script src="bundle.js"></script>
   </body>
 </html>
