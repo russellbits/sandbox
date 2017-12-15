@@ -14,7 +14,7 @@
     "url": "git+https://github.com/russellbits/sandbox.git"
   },
   "keywords": [
-    "javascript"
+    "javascript","vue"
   ],
   "author": "Russell Warner",
   "license": "ISC",
@@ -37,6 +37,9 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "vue": "^2.5.11",
+    "vue-loader": "^13.5.0",
+    "vue-template-compiler": "^2.5.11"
   }
 }
