@@ -10,7 +10,7 @@ headerShadowRoot.innerHTML = '<h1>Hello Shadow DOM</h1>' // Could also use appen
 
 function component() {
   var element = document.createElement('div')
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ')
+  element.innerHTML = _.join(['Hello', 'der', 'webpack'], ' ')
   element.classList.add('hello')
   return element
 }

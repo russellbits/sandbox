@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
-    "build": "webpack",
+    "build": "webpack -p",
     "start": "webpack-dev-server --open --watch-content-base"
   },
   "repository": {
@@ -14,7 +14,8 @@
     "url": "git+https://github.com/russellbits/sandbox.git"
   },
   "keywords": [
-    "javascript","vue"
+    "javascript",
+    "vue"
   ],
   "author": "Russell Warner",
   "license": "ISC",
@@ -33,6 +34,7 @@
     "html-webpack-plugin": "^2.30.1",
     "polymer-webpack-loader": "^2.0.0",
     "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
