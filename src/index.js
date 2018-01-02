@@ -4,23 +4,29 @@ import './style.css'
 import Message from './message.vue'
 
 // Adding a comment to see if webpack is watching.
-const header = document.createElement('header')
-const headerShadowRoot = header.attachShadow({mode: 'open'})
-headerShadowRoot.innerHTML = '<h1>Hello Shadow DOM</h1>' // Could also use appendChild().
+const url = new URL(window.location)
 
-function component() {
-  var element = document.createElement('div')
-  element.innerHTML = _.join(['Hello', 'der', 'webpack'], ' ')
-  element.classList.add('hello')
-  return element
+if(url.pathname === '/') {
+
+  const header = document.createElement('header')
+  const headerShadowRoot = header.attachShadow({mode: 'open'})
+  headerShadowRoot.innerHTML = '<h1>You are on the home page.</h1>' // Could also use appendChild().
+
+  function component() {
+    var element = document.createElement('div')
+    element.innerHTML = _.join(['Hello', 'der', 'webpack'], ' ')
+    element.classList.add('hello')
+    return element
+  }
+
+  document.body.appendChild(headerShadowRoot)
+  document.body.appendChild(component())
+
+  var host = document.querySelector('.container')
+  var root = host.attachShadow({mode: 'open'})
+  root.innerHTML = '<p>How <em>you</em> doin?</p>'
+
 }
-
-document.body.appendChild(headerShadowRoot)
-document.body.appendChild(component())
-
-var host = document.querySelector('.container')
-var root = host.attachShadow({mode: 'open'})
-root.innerHTML = '<p>How <em>you</em> doin?</p>'
 
 /**
  * Returns an array with a random selection removed from the array
