@@ -3,29 +3,72 @@ import _ from 'lodash'
 import './style.css'
 import Message from './message.vue'
 
-// Adding a comment to see if webpack is watching.
+// Write statement to page that confirms above URL check
+const header = document.createElement('header')
+const headerShadowRoot = header.attachShadow({mode: 'open'})
+headerShadowRoot.innerHTML = '<h1>Javascript Sandbox</h1>' // Could also use appendChild().
+document.body.appendChild(headerShadowRoot)
+
+/** Checking URL so scripts below only run on index.html
+ * or the desired function, placed in the results component
+**/
 const url = new URL(window.location)
+var gate
+var msg = ['Hello', 'der', 'webpack']
 
-if(url.pathname === '/') {
 
-  const header = document.createElement('header')
-  const headerShadowRoot = header.attachShadow({mode: 'open'})
-  headerShadowRoot.innerHTML = '<h1>You are on the home page.</h1>' // Could also use appendChild().
+/**
+ * Check the parameters for the sandbox
+ */
+if(url.search.substr(1).length < -1) {
+  gate = 'index'
+} else {
+  gate = url.searchParams.get("fn")
+}
 
-  function component() {
-    var element = document.createElement('div')
-    element.innerHTML = _.join(['Hello', 'der', 'webpack'], ' ')
-    element.classList.add('hello')
-    return element
+/**
+ * Here's an alternate function from css-tricks
+ * This function can retrieve multilpe parameters
+ **/
+function getQueryVariable(variable)
+{
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if(pair[0] == variable){return pair[1];}
   }
+  return(false);
+}
 
-  document.body.appendChild(headerShadowRoot)
-  document.body.appendChild(component())
+/**
+ * Switch based on the gate
+ * TODO: get selectWithLoss or encase to run inside this component gate
+ * which could mean giving component a function as opposed to an array
+ */
+switch(gate) {
+  case 'index':
+    document.body.appendChild(component(['Hello', 'from', 'index']))
+    break
+  case 'nominal':
+    document.body.appendChild(component(['Hello', 'from', 'nominal']))
+    break
+  case 'kate':
+    document.body.appendChild(component(['Hi', 'there', 'Kate']))
+    break
+  default:
+    document.body.appendChild(component(['Hello', 'from', 'default']))
+}
 
-  var host = document.querySelector('.container')
-  var root = host.attachShadow({mode: 'open'})
-  root.innerHTML = '<p>How <em>you</em> doin?</p>'
-
+/**
+ * This component requires an array (msg) as input
+ */
+function component(msg) {
+  var element = document.createElement('div')
+  element.classList.add('hello') // this should be the result
+  element.classList.add('transition') // this should be the result
+  element.innerHTML = _.join(msg, ' ') // this should come from the switch
+  return element
 }
 
 /**
