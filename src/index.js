@@ -1,10 +1,14 @@
 import Vue from 'vue'
 import _ from 'lodash'
+// import SVG from 'svg.js'
+// import Snap from 'snapsvg'
 import './style.css'
 import Message from './message.vue'
+import Snap from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js';
+
 
 // Write statement to page that confirms above URL check
-const header = document.createElement('header')
+const header = document.createElement('div')
 const headerShadowRoot = header.attachShadow({mode: 'open'})
 headerShadowRoot.innerHTML = '<h1>Javascript Sandbox</h1>' // Could also use appendChild().
 document.body.appendChild(headerShadowRoot)
@@ -48,7 +52,7 @@ function getQueryVariable(variable)
  */
 switch(gate) {
   case 'index':
-    document.body.appendChild(component(['Hello', 'from', 'index']))
+    document.body.appendChild(component(['A', 'Custom', 'Component!']))
     break
   case 'nominal':
     document.body.appendChild(component(['Hello', 'from', 'nominal']))
