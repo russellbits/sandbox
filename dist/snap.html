@@ -1,0 +1,20 @@
+<html>
+<head>
+  <title>Snap SVG Test</title>
+  <style>* { font-family: sans-serif; }</style>
+</head>
+<body>
+  <h1>Snap SVG Demo</h1>
+
+  <svg id="fingerprint"></svg>
+
+  <script src="bundle.js"></script>
+  <script>
+  var s = Snap("#fingerprint");
+  // Lets create big circle in the middle:
+  var bigCircle = s.circle(150, 150, 100);
+  // var draw = SVG('fingerprint').size(300, 300)
+  // var rect = draw.rect(100, 100).attr({ fill: '#f06' })
+  </script>
+</body>
+</html>

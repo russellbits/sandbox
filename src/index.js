@@ -1,19 +1,34 @@
 import Vue from 'vue'
 import SVG from 'svg.js'
 import _ from 'lodash'
+// import SVG from 'svg.js'
+// import Snap from 'snapsvg'
 import './style.css'
 import Message from './message.vue'
+import Snap from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js';
 
-// Adding a comment to see if webpack is watching.
-const header = document.createElement('header')
+
+// Write statement to page that confirms above URL check
+const header = document.createElement('div')
 const headerShadowRoot = header.attachShadow({mode: 'open'})
-headerShadowRoot.innerHTML = '<h1>Hello Shadow DOM</h1>' // Could also use appendChild().
+headerShadowRoot.innerHTML = '<h1>Javascript Sandbox</h1>' // Could also use appendChild().
+document.body.appendChild(headerShadowRoot)
 
-function component() {
-  var element = document.createElement('div')
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ')
-  element.classList.add('hello')
-  return element
+/** Checking URL so scripts below only run on index.html
+ * or the desired function, placed in the results component
+**/
+const url = new URL(window.location)
+var gate
+var msg = ['Hello', 'der', 'webpack']
+
+
+/**
+ * Check the parameters for the sandbox
+ */
+if(url.search.substr(1).length < -1) {
+  gate = 'index'
+} else {
+  gate = url.searchParams.get("fn")
 }
 
 
