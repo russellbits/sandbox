@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import SVG from 'svg.js'
 import _ from 'lodash'
 import './style.css'
 import Message from './message.vue'
@@ -15,12 +16,27 @@ function component() {
   return element
 }
 
+
+
+(function () {
+  console.log('grr')
+})
+
+(function Bear () {
+  ;['1','Two','banana'].forEach(function (n) {
+    console.log(n)
+  })
+}())
+
 document.body.appendChild(headerShadowRoot)
 document.body.appendChild(component())
 
-var host = document.querySelector('.container')
-var root = host.attachShadow({mode: 'open'})
-root.innerHTML = '<p>How <em>you</em> doin?</p>'
+// var host = document.querySelector('.container')
+// var root = host.attachShadow({mode: 'open'})
+// root.innerHTML = '<svg id="drawing"></svg>'
+
+var draw = SVG('drawing').size(300, 300)
+var rect = draw.rect(100, 100).attr({ fill: '#f06' })
 
 /**
  * Returns an array with a random selection removed from the array
